@@ -1,0 +1,19 @@
+Package: electionsIowa
+Type: Package
+Title: provides access to cleaned up Iowa election datasets.
+Version: 0.1.0
+Authors@R: c(
+    person(
+      "Matthew", "Currier",
+      role = c("aut", "cre")
+    )
+  )
+Description: Contains scripts and functions for cleaning up raw election data from the state of Iowa.
+    Continuation lines should be indented.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.3
+Imports: 
+    arrow,
+    here
