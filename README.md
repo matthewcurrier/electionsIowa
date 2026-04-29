@@ -8,7 +8,9 @@
 <!-- badges: end -->
 
 The goal of electionsIowa is to provide access to cleaned up Iowa
-election datasets.
+election datasets. You will need to download election result files
+yourself. Iowa elections results can be found
+**[here](https://sos.iowa.gov/iowans/election-results-statistics)**.
 
 ## Installation
 
