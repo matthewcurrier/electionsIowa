@@ -32,7 +32,7 @@ devtools::install_github("matthewcurrier/electionsIowa")
 
 This is a basic example which shows you how to solve a common problem:
 
-```{r example}
+```{r example, warning=FALSE, message=FALSE}
 library(arrow)
 library(here)
 
