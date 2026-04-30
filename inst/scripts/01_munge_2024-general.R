@@ -1,8 +1,14 @@
+# 01_munge_2024-general.R
+#
+# Reads the 2024 Iowa General Election results xlsx and writes a single
+# long-format parquet file to inst/parquet/.
+
 library(readxl)
 library(dplyr)
 library(purrr)
-library(writexl)
+library(arrow)
 library(here)
+library(fs)
 
 input_file <- here(
   "inst",
@@ -12,13 +18,12 @@ input_file <- here(
 )
 output_file <- here(
   "inst",
-  "data",
-  "2024",
-  "IA_2024_general-election-results_long.xlsx"
+  "parquet",
+  "IA_2024_general-election-results_long.parquet"
 )
 
 ELECTION_TYPE <- "General"
-ELECTION_YEAR <- 2024
+ELECTION_YEAR <- 2024L
 
 skip_sheets <- c("Table of Contents", "Registered Voters")
 all_sheets <- excel_sheets(input_file)
@@ -50,7 +55,7 @@ parse_sheet <- function(sheet_name) {
       tibble(
         precinct = precincts,
         candidate = candidate,
-        value = as.integer(data_rows[[start_col + 1]]),
+        value = as.integer(data_rows[[start_col + 1L]]),
         vote_type = "Absentee",
         office = office,
         election_type = ELECTION_TYPE,
@@ -69,5 +74,10 @@ results_gen_2024 <- map_dfr(contest_sheets, function(sheet) {
 
 message("Total rows: ", nrow(results_gen_2024))
 
-write_xlsx(list(results = results_gen_2024), output_file)
+results_gen_2024 <- results_gen_2024 |>
+  rename(county = precinct) |>
+  mutate(precinct = NA_character_)
+
+dir_create(path_dir(output_file))
+write_parquet(results_gen_2024, output_file)
 message("Saved to: ", output_file)

@@ -30,8 +30,12 @@ source(here("R", "parse_2020_general.R"))
 
 # ── Paths ──────────────────────────────────────────────────────────────────────
 
-input_dir   <- here("inst", "data", "2020", "general")
-output_file <- here("inst", "data", "2020", "IA_2020_general-election-results_long.parquet")
+input_dir <- here("inst", "data", "2020", "general")
+output_file <- here(
+  "inst",
+  "parquet",
+  "IA_2020_general-election-results_long.parquet"
+)
 
 # ── Discover county files ──────────────────────────────────────────────────────
 
@@ -42,7 +46,9 @@ if (length(xlsx_files) == 0) {
 }
 
 message(
-  "Found ", length(xlsx_files), " county xlsx file(s).\n",
+  "Found ",
+  length(xlsx_files),
+  " county xlsx file(s).\n",
   "Note: Scott County (PDF only) is handled separately and excluded here."
 )
 
@@ -56,12 +62,19 @@ results_gen_2020 <- map_dfr(xlsx_files, function(f) {
 # ── Validate ───────────────────────────────────────────────────────────────────
 
 stopifnot(
-  "election_year column must be 2020 throughout" =
-    all(results_gen_2020$election_year == 2020L),
-  "vote_type must be only Election Day or Absentee" =
-    all(results_gen_2020$vote_type %in% c("Election Day", "Absentee")),
-  "No NA values allowed in key identifier columns" =
-    !anyNA(results_gen_2020[c("precinct", "candidate", "vote_type", "office", "county")])
+  "election_year column must be 2020 throughout" = all(
+    results_gen_2020$election_year == 2020L
+  ),
+  "vote_type must be only Election Day or Absentee" = all(
+    results_gen_2020$vote_type %in% c("Election Day", "Absentee")
+  ),
+  "No NA values allowed in key identifier columns" = !anyNA(results_gen_2020[c(
+    "precinct",
+    "candidate",
+    "vote_type",
+    "office",
+    "county"
+  )])
 )
 
 message("Total rows: ", nrow(results_gen_2020))
